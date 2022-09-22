@@ -1,0 +1,155 @@
+!
+
+
+!
+upgrade fpd auto
+version 12.4
+service timestamps debug datetime msec
+service timestamps log datetime msec
+no service password-encryption
+!
+hostname 7206_1
+!
+boot-start-marker
+boot-end-marker
+!
+logging message-counter syslog
+enable secret 5 $1$X/nF$HHACggGyHx6bnBLJdzGj./
+enable password cisco
+!
+aaa new-model
+!
+!
+aaa authentication login default local
+aaa authentication enable default none
+aaa authorization exec default local none 
+!
+!
+aaa session-id common
+ip source-route
+ip cef
+!
+!
+!
+!
+ip host core_rtr 192.168.109.215
+ip host remoteSite_rtr 10.1.6.2
+ip host west_rtr 10.1.2.2
+ip host east_rtr 10.1.1.2
+ip host central_rtr_west 10.1.5.2
+ip host central_rtr_east 10.1.4.2
+no ipv6 cef
+ntp server 128.175.60.175
+!
+multilink bundle-name authenticated
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+username cisco privilege 15 password 0 cisco
+username dave privilege 15 password 0 dave
+archive
+ log config
+  hidekeys
+! 
+!
+!
+!
+!
+!
+!
+!
+!
+interface FastEthernet0/0
+ description Internet Connection
+ ip address 192.168.109.215 255.255.255.0
+ ip access-group 101 in
+ ip flow ingress
+ ip flow egress
+ ip policy route-map reroute
+ duplex full
+!
+interface FastEthernet1/0
+ description East Connection
+ ip address 10.1.1.1 255.255.255.0
+ duplex half
+!
+interface FastEthernet2/0
+ description West Connection
+ ip address 10.1.2.1 255.255.255.0
+ duplex half
+!
+interface FastEthernet3/0
+ description Central Connection
+ ip address 10.1.3.1 255.255.255.0
+ ip flow ingress
+ ip flow egress
+ duplex half
+!
+interface FastEthernet4/0
+ no ip address
+ shutdown
+ duplex half
+!
+router eigrp 9
+ redistribute static
+ network 10.1.0.0 0.0.255.255
+ network 192.168.109.0
+ auto-summary
+!
+ip forward-protocol nd
+ip route 0.0.0.0 0.0.0.0 192.168.109.1
+no ip http server
+no ip http secure-server
+!
+ip flow-cache timeout active 1
+ip flow-export version 9
+ip flow-export destination 192.168.109.243 9995
+ip flow-export destination 192.168.109.13 9996
+!
+!
+!
+!
+!
+!
+route-map reroute permit 10
+ match ip address 10
+ set ip default next-hop 10.1.1.2
+!
+!
+snmp-server community public RO
+!
+control-plane
+!
+!
+!
+mgcp fax t38 ecm
+mgcp behavior g729-variants static-pt
+!
+!
+!
+!
+gatekeeper
+ shutdown
+!
+!
+line con 0
+ stopbits 1
+line aux 0
+ stopbits 1
+line vty 0 4
+ password cisco
+!
+end
