@@ -95,6 +95,8 @@ ip flow-export destination 192.168.109.243 9995
 ip flow-export destination 192.168.109.13 9996
 !
 !
+logging trap debugging
+logging 192.168.118.39
 !
 !
 !
