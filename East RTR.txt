@@ -28,6 +28,7 @@ ip cef
 !
 !
 !
+ip domain name pliant.io
 ip host core_rtr 192.168.109.215
 ip host remoteSite_rtr 10.1.6.2
 ip host west_rtr 10.1.2.2
@@ -62,6 +63,7 @@ archive
 !
 !
 !
+ip scp server enable
 !
 !
 !
@@ -77,8 +79,7 @@ interface FastEthernet1/0
  duplex half
 !
 interface FastEthernet2/0
- no ip address
- shutdown
+ ip address 10.1.21.200 255.255.255.0
  duplex half
 !
 router eigrp 9
