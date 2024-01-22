@@ -1,0 +1,132 @@
+!
+upgrade fpd auto
+version 12.4
+service timestamps debug datetime msec
+service timestamps log datetime msec
+no service password-encryption
+!
+hostname rtr-central
+!
+boot-start-marker
+boot-end-marker
+!
+logging message-counter syslog
+enable password cisco
+!
+aaa new-model
+!
+!
+aaa authentication login default local
+aaa authentication enable default none
+aaa authorization exec default local none 
+!
+!
+aaa session-id common
+ip source-route
+ip cef
+!
+!
+!
+!
+ip host core_rtr 192.168.109.215
+ip host remoteSite_rtr 10.1.6.2
+ip host west_rtr 10.1.2.2
+ip host east_rtr 10.1.1.2
+ip host central_rtr 10.1.5.2
+no ipv6 cef
+ntp server 216.239.35.4
+ntp server 128.175.60.175
+!
+multilink bundle-name authenticated
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+username cisco privilege 15 password 0 cisco
+archive
+ log config
+  hidekeys
+! 
+!
+!
+!
+!
+!
+!
+!
+!
+interface FastEthernet0/0
+ ip address 10.1.4.2 255.255.255.0
+ ip flow ingress
+ ip flow egress
+ duplex half
+!
+interface FastEthernet1/0
+ ip address 10.1.5.2 255.255.255.0
+ duplex half
+!
+interface FastEthernet2/0
+ ip address 10.1.6.1 255.255.255.0
+ duplex half
+!
+interface FastEthernet3/0
+ no ip address
+ shutdown
+ duplex half
+!
+router eigrp 9
+ network 10.1.0.0 0.0.255.255
+ no auto-summary
+!
+ip forward-protocol nd
+no ip http server
+no ip http secure-server
+!
+ip flow-cache timeout active 1
+ip flow-export version 9
+ip flow-export destination 192.168.109.13 9996
+!
+!
+logging trap debugging
+logging 192.168.118.39
+!
+!
+!
+!
+!
+snmp-server community public RO
+!
+control-plane
+!
+!
+!
+mgcp fax t38 ecm
+mgcp behavior g729-variants static-pt
+!
+!
+!
+!
+gatekeeper
+ shutdown
+!
+!
+line con 0
+ stopbits 1
+line aux 0
+ stopbits 1
+line vty 0 4
+ password cisco
+!
+end
