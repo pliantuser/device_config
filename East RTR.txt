@@ -35,7 +35,7 @@ ip host west_rtr 10.1.2.2
 ip host east_rtr 10.1.1.2
 ip host central_rtr 10.1.5.2
 no ipv6 cef
-ntp server 128.175.60.175
+ntp server 216.239.35.4
 !
 multilink bundle-name authenticated
 !
